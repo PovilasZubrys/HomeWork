@@ -2,7 +2,7 @@
 
 class Agurkas {
 
-    public $id, $count, $img;
+    private $id, $count, $img;
 
     public function __construct($id) 
     {

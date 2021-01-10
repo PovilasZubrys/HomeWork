@@ -2,8 +2,13 @@ body {
     background-color: rgb(90, 168, 90);
 }
 main {
+    display: block;
     box-shadow: -5px 5px 30px;
     border-radius: 5px;
+    height: 100%;
+}
+main > form {
+    height: 100%;
 }
 main,
 header {
@@ -26,10 +31,15 @@ header > div > a {
     border-radius: 5px;
     background-color: rgb(3, 117, 3);
 }
-.sodas {
+.agurkas {
+    margin-top: 5px;
+    width: 100%;
     height: 100px;
-    margin-top: 15px;
-    padding: 5px;
+}
+.pomidoras {
+    margin-top: 5px;
+    width: 100%;
+    height: 100px;
 }
 .agurkai {
     float: left;
@@ -80,15 +90,31 @@ header > div > a {
         right: 0;
         margin: auto;
     }
-.sodinti {
-    width: 100%;
+.sodintiAgurka {
+    float: left;
+    width: 49%;
     margin-top: 15px;
     background-color: rgb(3, 117, 3);
     color: white;
     border: none;
-    border-radius: 0px 0px 5px 5px;
+    border-radius: 0px 0px 0px 5px;
     height: 30px;
     cursor: pointer;
+}
+.sodintiPomidora {
+    float: right;
+    width: 49%;
+    margin-top: 15px;
+    background-color: rgb(3, 117, 3);
+    color: white;
+    border: none;
+    border-radius: 0px 0px 5px 0px;
+    height: 30px;
+    cursor: pointer;
+}
+.agurkas {
+    width: 100%;
+    display: block;
 }
 .auginti {
     width: 100%;
@@ -121,13 +147,14 @@ header > div > a {
     float: left;
     height: 100px;
     width: 20%;
+    margin-bottom: 5px;
 }
 .skinti,
 .skintiVisus {
-    margin-bottom: 5px;
+    margin-bottom: 1px;
     display: block;
     vertical-align: middle;
-    height: 50%;
+    height: 49%;
     width: 100%;
     background-color: rgb(3, 117, 3);
     border-radius: 5px;

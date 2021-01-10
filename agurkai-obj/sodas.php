@@ -1,42 +1,65 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['a'])) {
-    $_SESSION['a'] = [];
-    $_SESSION['agurku ID'] = 0;
+include __DIR__.'/Agurkas.php';
+include __DIR__.'/Pomidoras.php';
+
+if(!isset($_SESSION['augalas'])) {
+    $_SESSION['augalas'] = []; // Agurku objektai
+    $_SESSION['augalasID'] = 0;
 }
 
 // Skynimo scenarijus
-if(isset($_POST['skinti'])) {
-    foreach($_SESSION['a'] as $index => &$agurkas) {
-        if ($agurkas['agurkai'] < $_POST['skinam'][$agurkas['id']] || $_POST['skinam'][$agurkas['id']] < 0) {
+if(isset($_POST['skintiAgurkus'])) {
+    foreach($_SESSION['augalas'] as $index => $augalas) {
+        $augalas = unserialize($augalas);
+        if ($augalas->count < $_POST['skinam'][$augalas->id] || $_POST['skinam'][$augalas->id] < 0 || is_numeric($_POST['skinam'][$augalas->id]) === false) {
             $_SESSION['err'] = 'Blogas agurkų kiekis!';
         } else {
             $skinti = $_POST['skinam'];
-            $agurkas['agurkai'] -= $_POST['skinam'][$agurkas['id']];
-        }    
+            $augalas->skintiAgurkus($_POST['skinam'][$augalas->id]);
+            $augalas = serialize($augalas);
+            $_SESSION['augalas'][$index] = $augalas;
+        }
     }
-    header('Location: http://localhost/agurkai/sodas.php');
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
+    exit;
+}
+
+if(isset($_POST['skintiPomidorus'])) {
+    foreach($_SESSION['augalas'] as $index => $augalas) {
+        $augalas = unserialize($augalas);
+        if ($augalas->count < $_POST['skinam'][$augalas->id] || $_POST['skinam'][$augalas->id] < 0 || is_numeric($_POST['skinam'][$augalas->id]) === false) {
+            $_SESSION['err'] = 'Blogas agurkų kiekis!';
+        } else {
+            $skinti = $_POST['skinam'];
+            $augalas->skintiPomidorus($_POST['skinam'][$augalas->id]);
+            $augalas = serialize($augalas);
+            $_SESSION['augalas'][$index] = $augalas;
+        }
+    }
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
     exit;
 }
 
 // Skinti visus
 if(isset($_POST['skintiVisus'])) {
-    foreach($_SESSION['a'] as $index => &$agurkas) {
-        if ($_POST['skintiVisus'] == $agurkas['id']) {
-            $agurkas['agurkai'] -= $agurkas['agurkai'];
+    foreach($_SESSION['obj'] as $index => $agurkas) {
+        $agurkas = unserialize($agurkas);
+        if ($_POST['skintiVisus'] == $agurkas->id) {
+            $agurkas->skintiVisus($agurkas);
+            $agurkas = serialize($agurkas);
+            $_SESSION['obj'][$index] = $agurkas;
         }
     }
-    header('Location: http://localhost/agurkai/sodas.php');
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
     exit;
 }
 
 // Skinti visą derlių
 if(isset($_POST['skintiDerliu'])) {
-    foreach($_SESSION['a'] as $index => &$agurkas) {
-    $agurkas['agurkai'] = 0;
-    }
-    header('Location: http://localhost/agurkai/sodas.php');
+    $_SESSION['augalas'] = Agurkas::skintiDerliu($_SESSION['augalas']);
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
     exit;
 }
 
@@ -68,23 +91,46 @@ if(isset($_POST['skintiDerliu'])) {
         ?>
     </h3>
     <form action="" method="post">
-        <?php foreach($_SESSION['a'] as $agurkas): ?>
-        <div class="sodas">
+        <?php foreach($_SESSION['augalas'] as $augalas): ?>
+        <?php $augalas = unserialize($augalas) ?>
+        <?php if ($augalas instanceof Agurkas): ?>
+        
+        <div class="agurkas">
             <div class="imgDiv">
-                <img src="./img/<?=$agurkas['img']?>" alt="agurcikas" class="images">
+                <img src="./img/agurkas/<?=$augalas->img?>.png" alt="agurcikas" class="images">
             </div>
             <div class="agurkai">
                 <p class="agurkaiText"> 
-                    Agurkas Nr. <?= $agurkas['id'] ?>
-                    Galima skinti: <?= $agurkas['agurkai'] ?>
+                    Agurkas Nr. <?= $augalas->id ?>
+                    Galima skinti: <?= $augalas->count ?>
                 </p>
-                <input type="text" class="skinam" name="skinam[<?=$agurkas['id']?>]" value="<?= $skinti ?? ''?>">
+                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
             </div>
             <div class="mygtukai">
-                <button type="submit" name="skinti" class="skinti">Skinti</button>
-                <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$agurkas['id']?>">Skinti Visus</button>
+                <button type="submit" name="skintiAgurkus" class="skinti">Skinti agurkus</button>
+                <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Agurkus</button>
             </div>
         </div>
+
+        <?php else: ?>
+
+        <div class="pomidoras">
+            <div class="imgDiv">
+                <img src="./img/pomidoras/<?=$augalas->img?>.png" alt="agurcikas" class="images">
+            </div>
+            <div class="agurkai">
+                <p class="agurkaiText"> 
+                    Pomidoras Nr. <?= $augalas->id ?>
+                    Galima skinti: <?= $augalas->count ?>
+                </p>
+                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
+            </div>
+            <div class="mygtukai">
+                <button type="submit" name="skintiPomidorus" class="skinti">Skinti pomidorus</button>
+                <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Pomidorus</button>
+            </div>
+        </div>
+        <?php endif ?>
         <?php endforeach ?>
     <button type="submit" name="skintiDerliu" class="skintiDerliu">Skinti Derliu</button>
     </form>

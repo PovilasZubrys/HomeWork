@@ -2,28 +2,41 @@
 session_start();
 
 include __DIR__.'/Agurkas.php';
+include __DIR__.'/Pomidoras.php';
 
-if(!isset($_SESSION['obj'])) {
-    $_SESSION['obj'] = []; // Agurku objektai
-    $_SESSION['agurku ID'] = 0;
+if(!isset($_SESSION['augalas'])) {
+    $_SESSION['augalas'] = []; // Agurku objektai
+    $_SESSION['augalasID'] = 0;
 }
 
 
-// Sodinimo scenarijus
-if(isset($_POST['sodinti'])) {
-    $agurkoObj = new Agurkas($_SESSION['agurku ID']);
-    $_SESSION['agurku ID']++;
-    $_SESSION['obj'][] = serialize($agurkoObj);
+// Agurku sodinimo scenarijus
+if(isset($_POST['sodintiAgurka'])) {
+    
+    $agurkoObj = new Agurkas($_SESSION['augalasID']);
+    $_SESSION['augalasID']++;
+    $_SESSION['augalas'][] = serialize($agurkoObj);
 
-    header('Location: http://localhost/agurkai-obj/sodinimas.php');
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
+    exit;
+}
+
+if(isset($_POST['sodintiPomidora'])) {
+    
+    $pomidoroObj = new Pomidoras($_SESSION['augalasID']);
+    $_SESSION['augalasID']++;
+    $_SESSION['augalas'][] = serialize($pomidoroObj);
+
+    header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
     exit;
 }
 // Isrovimo scenarijus
 if(isset($_POST['rauti'])) {
-    foreach ($_SESSION['a'] as $index => $agurkas) {
-        if($_POST['rauti'] == $agurkas['id']) {
-            unset($_SESSION['a'][$index], $_SESSION['obj'][$index]);
-            header('Location: http://localhost/agurkai-obj/sodinimas.php');
+    foreach ($_SESSION['augalas'] as $index => $augalas) {
+        $augalas = unserialize($augalas);
+        if($_POST['rauti'] == $augalas->id) {
+            unset($_SESSION['augalas'][$index]);
+            header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
             exit;
         }
     }
@@ -51,25 +64,48 @@ if(isset($_POST['rauti'])) {
 <main>
     <form action="" method="POST">
 
-        <?php foreach($_SESSION['obj'] as $agurkas): ?>
-        <?php $agurkas = unserialize($agurkas) ?>
-        <?php _dc($agurkas) ?>
-        <div class="sodas">
-            <div class="imgDiv">
-                <img src="./img/1.png" alt="agurcikas" class="images">
+        <?php foreach($_SESSION['augalas'] as $augalas): ?>
+        <?php $augalas = unserialize($augalas) ?>
+        <?php if ($augalas instanceof Agurkas): ?>
+        <div>
+            <div class="agurkas">
+                <div class="imgDiv">
+                    <img src="./img/agurkas/<?= $augalas->img ?>.png" alt="agurcikas" class="images">
+                </div>
+                <div class="agurkai">
+                    <p class="agurkaiText">
+                    Agurkas nr. <?= $augalas->id ?>
+                    Agurku: <?= $augalas->count ?>
+                    </p>
+                </div>
+                <div class="israuti">
+                    <button type="submit" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
+                </div>
             </div>
-            <div class="agurkai">
-                <p class="agurkaiText">
-                Agurkas nr. <?= $agurkas->id ?>
-                Agurku: <?= $agurkas->count ?>
-                </p>
+    
+            <?php endif ?>
+            <?php if ($augalas instanceof Pomidoras): ?>
+    
+            <div class="pomidoras">
+    
+                <div class="imgDiv">
+                    <img src="./img/pomidoras/<?= $augalas->img ?>.png" alt="agurcikas" class="images">
+                </div>
+                <div class="agurkai">
+                    <p class="agurkaiText">
+                    Pomidoras nr. <?= $augalas->id ?>
+                    Pomidoru: <?= $augalas->count ?>
+                    </p>
+                </div>
+                <div class="israuti">
+                    <button type="submit" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
+                </div>
             </div>
-            <div class="israuti">
-                <button type="submit" name="rauti" class="israutiButton" value="<?= $agurkas->id ?>">israuti</button>
-            </div>
-        </div>
+        <?php endif ?>
         <?php endforeach ?>
-        <button type="submit" name="sodinti" class="sodinti">SODINTI</button>
+        <button type="submit" name="sodintiAgurka" class="sodintiAgurka">SODINTI AGURKA</button>
+        <button type="submit" name="sodintiPomidora" class="sodintiPomidora">SODINTI POMIDORA</button>
+    </div>
     </form>
 </main>
 </body>

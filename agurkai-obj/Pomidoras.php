@@ -1,6 +1,6 @@
 <?php
 
-class Agurkas {
+class Pomidoras {
 
     private $id, $count, $img;
 
@@ -26,22 +26,16 @@ class Agurkas {
         $this->$propertyName = $value;
     }
 
-    public function addAgurkas($agurkai){
-        $this->count = $this->count + $agurkai;
+    public function addPomidoras($pomidorai){
+        $this->count = $this->count + $pomidorai;
     }
-    public function skintiAgurkus($agurkai) {
-        $this->count = $this->count - $agurkai;
+    public function skintiPomidorus($pomidorai) {
+        $this->count = $this->count - $pomidorai;
     }
-    public function skintiVisus($agurkai) {
+    public function skintiVisus($pomidorai) {
         $this->count -= $this->count;
     }
     public function nuskintiVisus(){
         $this->count = 0;
     }
-
-    // Visai nebutina
-    // public function __serialize() // <---- ivyksta kai objektas yra serializuojamas
-    // {
-
-    // }
 }
