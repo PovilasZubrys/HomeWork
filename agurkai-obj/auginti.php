@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include __DIR__.'/Augalai.php';
+
 include __DIR__.'/Agurkas.php';
 include __DIR__.'/Pomidoras.php';
 
@@ -48,7 +50,6 @@ if (isset($_POST['auginti'])) {
     <form action="" method="post">
         <?php foreach($_SESSION['augalas'] as $augalas): ?>
         <?php $augalas = unserialize($augalas) ?>
-        <?php $kiekis = rand(2, 9) ?>
         <?php if ($augalas instanceof Agurkas): ?>
         
         <div>
@@ -59,7 +60,7 @@ if (isset($_POST['auginti'])) {
                 <div class="agurkai">
                     <p class="agurkaiText">
                         Agurkas nr. <?= $augalas->id ?>
-                        Agurku: <?= $augalas->count ?> + <?= $kiekis ?>
+                        Agurku: <?= $augalas->count ?> + <?= $kiekis = $augalas->augti() ?>
                     </p>
                 <input type="hidden" name="kiekis[<?= $augalas->id ?>]" value="<?= $kiekis ?>">
                 </div>
@@ -74,7 +75,7 @@ if (isset($_POST['auginti'])) {
                 <div class="agurkai">
                     <p class="agurkaiText">
                         Pomidoras nr. <?= $augalas->id ?>
-                        Pomidoras: <?= $augalas->count ?> + <?= $kiekis ?>
+                        Pomidoras: <?= $augalas->count ?> + <?= $kiekis = $augalas->augti() ?>
                     </p>
                 <input type="hidden" name="kiekis[<?= $augalas->id ?>]" value="<?= $kiekis ?>">
                 </div>

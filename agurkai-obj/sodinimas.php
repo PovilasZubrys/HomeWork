@@ -1,47 +1,33 @@
 <?php
 session_start();
+include __DIR__.'/App.php';
+include __DIR__.'/Augalai.php';
 
 include __DIR__.'/Agurkas.php';
 include __DIR__.'/Pomidoras.php';
 
-if(!isset($_SESSION['augalas'])) {
-    $_SESSION['augalas'] = []; // Agurku objektai
-    $_SESSION['augalasID'] = 0;
-}
-
+App::isSetSession();
 
 // Agurku sodinimo scenarijus
 if(isset($_POST['sodintiAgurka'])) {
     
-    $agurkoObj = new Agurkas($_SESSION['augalasID']);
-    $_SESSION['augalasID']++;
-    $_SESSION['augalas'][] = serialize($agurkoObj);
-
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
-    exit;
+    App::newAgurkas();
+    App::redirect('sodinimas');
 }
 
+//  Pomidoru sodinimo scenarijus
 if(isset($_POST['sodintiPomidora'])) {
     
-    $pomidoroObj = new Pomidoras($_SESSION['augalasID']);
-    $_SESSION['augalasID']++;
-    $_SESSION['augalas'][] = serialize($pomidoroObj);
-
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
-    exit;
+    App::newPomidoras();
+    App::redirect('sodinimas');
 }
+
 // Isrovimo scenarijus
 if(isset($_POST['rauti'])) {
-    foreach ($_SESSION['augalas'] as $index => $augalas) {
-        $augalas = unserialize($augalas);
-        if($_POST['rauti'] == $augalas->id) {
-            unset($_SESSION['augalas'][$index]);
-            header('Location: http://localhost/HomeWork/agurkai-obj/sodinimas.php');
-            exit;
-        }
-    }
-}
 
+    App::rauti();
+    App::redirect('sodinimas');
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +53,7 @@ if(isset($_POST['rauti'])) {
         <?php foreach($_SESSION['augalas'] as $augalas): ?>
         <?php $augalas = unserialize($augalas) ?>
         <?php if ($augalas instanceof Agurkas): ?>
+        
         <div>
             <div class="agurkas">
                 <div class="imgDiv">
@@ -87,7 +74,6 @@ if(isset($_POST['rauti'])) {
             <?php if ($augalas instanceof Pomidoras): ?>
     
             <div class="pomidoras">
-    
                 <div class="imgDiv">
                     <img src="./img/pomidoras/<?= $augalas->img ?>.png" alt="agurcikas" class="images">
                 </div>
@@ -101,12 +87,13 @@ if(isset($_POST['rauti'])) {
                     <button type="submit" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
                 </div>
             </div>
+
         <?php endif ?>
         <?php endforeach ?>
+
         <button type="submit" name="sodintiAgurka" class="sodintiAgurka">SODINTI AGURKA</button>
         <button type="submit" name="sodintiPomidora" class="sodintiPomidora">SODINTI POMIDORA</button>
-    </div>
     </form>
-</main>
+</main> 
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-class Pomidoras {
+class Pomidoras extends Augalai {
 
     private $id, $count, $img;
 
@@ -8,15 +8,6 @@ class Pomidoras {
         $this->id = $id + 1;
         $this->img = rand(1, 5);
         $this->count = 0;
-    }
-    public static function skintiDerliu($visasDerlius) { // <<< $visiAgurkai = $_SESSION['obj]
-        foreach ($visasDerlius as $key => $agurkas) {
-            $agurkas = unserialize($agurkas);
-            $agurkas->nuskintiVisus();
-            $agurkas = serialize($agurkas);
-            $visasDerlius[$key] = $agurkas;
-        }
-        return $visasDerlius;
     }
     public function __get($propertyName) {
         return $this->$propertyName;
@@ -32,10 +23,7 @@ class Pomidoras {
     public function skintiPomidorus($pomidorai) {
         $this->count = $this->count - $pomidorai;
     }
-    public function skintiVisus($pomidorai) {
-        $this->count -= $this->count;
-    }
-    public function nuskintiVisus(){
-        $this->count = 0;
+    public function augti(){
+        return rand(1, 9);
     }
 }

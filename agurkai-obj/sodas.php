@@ -1,13 +1,12 @@
 <?php
 session_start();
+include __DIR__.'/App.php';
+include __DIR__.'/Augalai.php';
 
 include __DIR__.'/Agurkas.php';
 include __DIR__.'/Pomidoras.php';
 
-if(!isset($_SESSION['augalas'])) {
-    $_SESSION['augalas'] = []; // Agurku objektai
-    $_SESSION['augalasID'] = 0;
-}
+App::isSetSession();
 
 // Skynimo scenarijus
 if(isset($_POST['skintiAgurkus'])) {
@@ -44,21 +43,21 @@ if(isset($_POST['skintiPomidorus'])) {
 
 // Skinti visus
 if(isset($_POST['skintiVisus'])) {
-    foreach($_SESSION['obj'] as $index => $agurkas) {
-        $agurkas = unserialize($agurkas);
-        if ($_POST['skintiVisus'] == $agurkas->id) {
-            $agurkas->skintiVisus($agurkas);
-            $agurkas = serialize($agurkas);
-            $_SESSION['obj'][$index] = $agurkas;
+    foreach($_SESSION['augalas'] as $index => $augalas) {
+        $augalas = unserialize($augalas);
+        if ($_POST['skintiVisus'] == $augalas->id) {
+            $augalas->skintiVisus();
+            $augalas = serialize($augalas);
+            $_SESSION['augalas'][$index] = $augalas;
+            header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
+            exit;
         }
     }
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
-    exit;
-}
+    }
 
 // Skinti visą derlių
 if(isset($_POST['skintiDerliu'])) {
-    $_SESSION['augalas'] = Agurkas::skintiDerliu($_SESSION['augalas']);
+    $_SESSION['augalas'] = Augalai::skintiDerliu($_SESSION['augalas']);
     header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
     exit;
 }
