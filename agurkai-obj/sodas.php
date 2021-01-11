@@ -9,57 +9,24 @@ include __DIR__.'/Pomidoras.php';
 App::isSetSession();
 
 // Skynimo scenarijus
-if(isset($_POST['skintiAgurkus'])) {
-    foreach($_SESSION['augalas'] as $index => $augalas) {
-        $augalas = unserialize($augalas);
-        if ($augalas->count < $_POST['skinam'][$augalas->id] || $_POST['skinam'][$augalas->id] < 0 || is_numeric($_POST['skinam'][$augalas->id]) === false) {
-            $_SESSION['err'] = 'Blogas agurkų kiekis!';
-        } else {
-            $skinti = $_POST['skinam'];
-            $augalas->skintiAgurkus($_POST['skinam'][$augalas->id]);
-            $augalas = serialize($augalas);
-            $_SESSION['augalas'][$index] = $augalas;
-        }
-    }
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
-    exit;
-}
+if(isset($_POST['skinti'])) {
 
-if(isset($_POST['skintiPomidorus'])) {
-    foreach($_SESSION['augalas'] as $index => $augalas) {
-        $augalas = unserialize($augalas);
-        if ($augalas->count < $_POST['skinam'][$augalas->id] || $_POST['skinam'][$augalas->id] < 0 || is_numeric($_POST['skinam'][$augalas->id]) === false) {
-            $_SESSION['err'] = 'Blogas agurkų kiekis!';
-        } else {
-            $skinti = $_POST['skinam'];
-            $augalas->skintiPomidorus($_POST['skinam'][$augalas->id]);
-            $augalas = serialize($augalas);
-            $_SESSION['augalas'][$index] = $augalas;
-        }
-    }
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
-    exit;
+    App::skinti();
+    App::redirect('sodas');
 }
 
 // Skinti visus
 if(isset($_POST['skintiVisus'])) {
-    foreach($_SESSION['augalas'] as $index => $augalas) {
-        $augalas = unserialize($augalas);
-        if ($_POST['skintiVisus'] == $augalas->id) {
-            $augalas->skintiVisus();
-            $augalas = serialize($augalas);
-            $_SESSION['augalas'][$index] = $augalas;
-            header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
-            exit;
-        }
-    }
-    }
+    
+    App::skintiVisus();
+    App::redirec('sodas');
+}
 
 // Skinti visą derlių
 if(isset($_POST['skintiDerliu'])) {
-    $_SESSION['augalas'] = Augalai::skintiDerliu($_SESSION['augalas']);
-    header('Location: http://localhost/HomeWork/agurkai-obj/sodas.php');
-    exit;
+
+    App::skintiVisaDerliu();
+    App::redirect('sodas');
 }
 
 ?>
@@ -106,7 +73,7 @@ if(isset($_POST['skintiDerliu'])) {
                 <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
             </div>
             <div class="mygtukai">
-                <button type="submit" name="skintiAgurkus" class="skinti">Skinti agurkus</button>
+                <button type="submit" name="skinti" class="skinti">Skinti agurkus</button>
                 <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Agurkus</button>
             </div>
         </div>
@@ -125,7 +92,7 @@ if(isset($_POST['skintiDerliu'])) {
                 <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
             </div>
             <div class="mygtukai">
-                <button type="submit" name="skintiPomidorus" class="skinti">Skinti pomidorus</button>
+                <button type="submit" name="skinti" class="skinti">Skinti pomidorus</button>
                 <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Pomidorus</button>
             </div>
         </div>

@@ -1,31 +1,18 @@
 <?php
 session_start();
-
+include __DIR__.'/App.php';
 include __DIR__.'/Augalai.php';
 
 include __DIR__.'/Agurkas.php';
 include __DIR__.'/Pomidoras.php';
 
-if(!isset($_SESSION['augalas'])) {
-    $_SESSION['augalas'] = []; // Agurku objektai
-    $_SESSION['augalasID'] = 0;
-}
+App::isSetSession();
 
 // AUGINIMO SCENARIJUS
 if (isset($_POST['auginti'])) {
-    foreach($_SESSION['augalas'] as $index => $augalas) { // << Serializacijos stringas
-        $augalas = unserialize($augalas); // << agurko objektas
-        if ($augalas instanceof Agurkas) {
-            $augalas->addAgurkas($_POST['kiekis'][$augalas->id]); // << Pridedam agurka
-        } else {
-            $augalas->addPomidoras($_POST['kiekis'][$augalas->id]); // << Pridedam agurka
-        }
-        $augalas = serialize($augalas); // << vel stringas
-        $_SESSION['augalas'][$index] = $augalas; // << issaugom agurkus
-    }
 
-    header('Location: http://localhost/HomeWork/agurkai-obj/auginti.php');
-    exit;
+    App::auginti();
+    App::redirect('auginti');
 }
 
 ?>
