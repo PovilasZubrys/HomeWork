@@ -1,34 +1,31 @@
 <?php
-session_start();
-include __DIR__.'/App.php';
-include __DIR__.'/Augalai.php';
+defined('DOOR_BELL') || die('Iėjimas tik pro duris :)');
 
-include __DIR__.'/Agurkas.php';
-include __DIR__.'/Pomidoras.php';
+use Sodas\App;
+use Sodas\Store;
+use Cucumber\Agurkas;
+use Tomato\Pomidoras;
 
-App::isSetSession();
+$store = new Store('augalas');
 
 // Skynimo scenarijus
 if(isset($_POST['skinti'])) {
-
-    App::skinti();
+    $store->skinti();
     App::redirect('sodas');
 }
-
 // Skinti visus
 if(isset($_POST['skintiVisus'])) {
     
-    App::skintiVisus();
-    App::redirec('sodas');
+    $store->skintiVisus();
+    App::redirect('sodas');
 }
 
 // Skinti visą derlių
 if(isset($_POST['skintiDerliu'])) {
 
-    App::skintiVisaDerliu();
+    $store->skintiDerliu();
     App::redirect('sodas');
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,8 +40,8 @@ if(isset($_POST['skintiDerliu'])) {
     <h1>Agurku sodas</h1>
     <h2>Sodinimas</h2>
     <div>
-        <a href="auginti.php">Auginti</a>
-        <a href="sodinimas.php">Sodinimas</a>
+        <a href="<?= URL.'auginti' ?>">Auginti</a>
+        <a href="<?= URL.'sodinimas' ?>">Sodinimas</a>
     </div>
 </header>
 <main>
@@ -56,9 +53,8 @@ if(isset($_POST['skintiDerliu'])) {
         }
         ?>
     </h3>
-    <form action="" method="post">
-        <?php foreach($_SESSION['augalas'] as $augalas): ?>
-        <?php $augalas = unserialize($augalas) ?>
+    <form action="<?= URL.'sodas' ?>" method="post">
+        <?php foreach($store->getAll() as $augalas): ?>
         <?php if ($augalas instanceof Agurkas): ?>
         
         <div class="agurkas">
@@ -70,15 +66,15 @@ if(isset($_POST['skintiDerliu'])) {
                     Agurkas Nr. <?= $augalas->id ?>
                     Galima skinti: <?= $augalas->count ?>
                 </p>
-                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
+                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]">
             </div>
             <div class="mygtukai">
-                <button type="submit" name="skinti" class="skinti">Skinti agurkus</button>
-                <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Agurkus</button>
+                <button type="submit" name="skinti" class="skinti" value="<?=$augalas->id?>">Skinti agurkus</button>
+                <button type="submit" name="skintiVisus" class="skintiVisus">Skinti Visus Agurkus</button>
             </div>
         </div>
 
-        <?php else: ?>
+        <?php elseif ($augalas instanceof Pomidoras): ?>
 
         <div class="pomidoras">
             <div class="imgDiv">
@@ -89,10 +85,10 @@ if(isset($_POST['skintiDerliu'])) {
                     Pomidoras Nr. <?= $augalas->id ?>
                     Galima skinti: <?= $augalas->count ?>
                 </p>
-                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]" value="<?= $skinti ?? ''?>">
+                <input type="text" class="skinam" name="skinam[<?=$augalas->id?>]">
             </div>
             <div class="mygtukai">
-                <button type="submit" name="skinti" class="skinti">Skinti pomidorus</button>
+                <button type="submit" name="skinti" class="skinti" value="<?=$augalas->id?>">Skinti pomidorus</button>
                 <button type="submit" name="skintiVisus" class="skintiVisus" value="<?=$augalas->id?>">Skinti Visus Pomidorus</button>
             </div>
         </div>

@@ -1,6 +1,9 @@
 <?php
+namespace Cucumber;
 
-class Pomidoras extends Augalai {
+use Plants\Augalai;
+
+class Agurkas extends Augalai {
 
     private $id, $count, $img;
 
@@ -17,13 +20,14 @@ class Pomidoras extends Augalai {
         $this->$propertyName = $value;
     }
 
-    public function addPomidoras($pomidorai){
-        $this->count = $this->count + $pomidorai;
+    public function addAgurkas($agurkai){
+        $this->count = $this->count + $agurkai;
     }
-    public function skintiPomidorus($pomidorai) {
-        $this->count = $this->count - $pomidorai;
+    public function skintiAgurkus($agurkai) {
+        $this->count = $this->count - $agurkai;
     }
+ 
     public function augti(){
-        return rand(1, 9);
+        return rand(1, 3);
     }
 }

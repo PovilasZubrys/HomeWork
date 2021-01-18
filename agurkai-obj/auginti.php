@@ -1,17 +1,17 @@
 <?php
-session_start();
-include __DIR__.'/App.php';
-include __DIR__.'/Augalai.php';
+defined('DOOR_BELL') || die('Iėjimas tik pro duris :)');
 
-include __DIR__.'/Agurkas.php';
-include __DIR__.'/Pomidoras.php';
+use Sodas\App;
+use Sodas\Store;
+use Cucumber\Agurkas;
+use Tomato\Pomidoras;
 
-App::isSetSession();
+$store = new Store('augalas');
 
 // AUGINIMO SCENARIJUS
 if (isset($_POST['auginti'])) {
 
-    App::auginti();
+    $store->grow();
     App::redirect('auginti');
 }
 
@@ -29,14 +29,13 @@ if (isset($_POST['auginti'])) {
     <h1>Agurku sodas</h1>
     <h2>Sodinimas</h2>
     <div>
-        <a href="sodinimas.php">Sodinimas</a>
-        <a href="sodas.php">Sodas</a>
+        <a href="<?= URL.'sodinimas' ?>">Sodinimas</a>
+        <a href="<?= URL.'sodas' ?>">Sodas</a>
     </div>
 </header>
 <main>
-    <form action="" method="post">
-        <?php foreach($_SESSION['augalas'] as $augalas): ?>
-        <?php $augalas = unserialize($augalas) ?>
+    <form action="<?= URL.'auginti' ?>" method="post">
+        <?php foreach($store->getAll() as $augalas): ?>
         <?php if ($augalas instanceof Agurkas): ?>
         
         <div>

@@ -1,31 +1,36 @@
 <?php
-session_start();
-include __DIR__.'/App.php';
-include __DIR__.'/Augalai.php';
+defined('DOOR_BELL') || die('Iėjimas tik pro duris :)');
 
-include __DIR__.'/Agurkas.php';
-include __DIR__.'/Pomidoras.php';
+use Sodas\App;
+use Sodas\Store;
+use Cucumber\Agurkas;
+use Tomato\Pomidoras;
 
-App::isSetSession();
+$store = new Store('augalas');
 
 // Agurku sodinimo scenarijus
 if(isset($_POST['sodintiAgurka'])) {
     
-    App::newAgurkas();
+    $agurkoObj = new Agurkas($store->getNewId());
+    $store->addNew($agurkoObj);
+
     App::redirect('sodinimas');
 }
 
 //  Pomidoru sodinimo scenarijus
 if(isset($_POST['sodintiPomidora'])) {
     
-    App::newPomidoras();
+    $pomidoroObj = new Pomidoras($store->getNewId());
+    $store->addNew($pomidoroObj);
+
     App::redirect('sodinimas');
 }
 
 // Isrovimo scenarijus
 if(isset($_POST['rauti'])) {
 
-    App::rauti();
+    $store->remove($_POST['rauti']);
+
     App::redirect('sodinimas');
 }
 ?>
@@ -43,15 +48,14 @@ if(isset($_POST['rauti'])) {
         <h1>Agurku sodas</h1>
         <h2>Sodinimas</h2>
         <div>
-            <a href="auginti.php">Auginti</a>
-            <a href="sodas.php">Sodas</a>
+            <a href="<?= URL.'auginti' ?>">Auginti</a>
+            <a href="<?= URL.'sodas' ?>">Sodas</a>
         </div>
     </header>
     <main>
-        <form action="" method="POST">
+        <form action="<?= URL.'sodinimas' ?>" method="POST">
 
-            <?php foreach($_SESSION['augalas'] as $augalas): ?>
-            <?php $augalas = unserialize($augalas) ?>
+            <?php foreach($store->getAll() as $augalas): ?>
             <?php if ($augalas instanceof Agurkas): ?>
 
             <div>
