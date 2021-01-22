@@ -10,6 +10,8 @@ $store = new Store('augalas');
 
 // Skynimo scenarijus
 if(isset($_POST['skinti'])) {
+    _d($_POST['skinti']);
+    die;
     $store->skinti();
     App::redirect('sodas');
 }
