@@ -8,30 +8,35 @@ use Tomato\Pomidoras;
 
 $store = new Store('augalas');
 
-// Agurku sodinimo scenarijus
-if(isset($_POST['sodintiAgurka'])) {
-    
-    $agurkoObj = new Agurkas($store->getNewId());
-    $store->addNew($agurkoObj);
+if('POST' == $_SERVER['REQUEST_METHOD']) {
+    $rawData = file_get_contents("php://input");
+    $rawData = json_decode($rawData, 1);
 
-    App::redirect('sodinimas');
-}
+    // Agurku sodinimo scenarijus
+    if(isset($_POST['sodintiAgurka'])) {
+        
+        $agurkoObj = new Agurkas($store->getNewId());
+        $store->addNew($agurkoObj);
 
-//  Pomidoru sodinimo scenarijus
-if(isset($_POST['sodintiPomidora'])) {
-    
-    $pomidoroObj = new Pomidoras($store->getNewId());
-    $store->addNew($pomidoroObj);
+        App::redirect('sodinimas');
+    }
 
-    App::redirect('sodinimas');
-}
+    //  Pomidoru sodinimo scenarijus
+    if(isset($_POST['sodintiPomidora'])) {
+        
+        $pomidoroObj = new Pomidoras($store->getNewId());
+        $store->addNew($pomidoroObj);
 
-// Isrovimo scenarijus
-if(isset($_POST['rauti'])) {
+        App::redirect('sodinimas');
+    }
 
-    $store->remove($_POST['rauti']);
+    // Isrovimo scenarijus
+    if(isset($_POST['rauti'])) {
 
-    App::redirect('sodinimas');
+        $store->remove($_POST['rauti']);
+
+        App::redirect('sodinimas');
+    }
 }
 ?>
 
@@ -42,6 +47,9 @@ if(isset($_POST['rauti'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sodinimas</title>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" defer integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+    <script src="js/app.js" defer></script>
+    <script>const apiUrl = 'http://localhost/HomeWork/agurkai-js/sodinimas';</script>
 </head>
 <body>
     <header>
@@ -54,6 +62,8 @@ if(isset($_POST['rauti'])) {
     </header>
     <main>
         <form action="<?= URL.'sodinimas' ?>" method="POST">
+
+            <div id="list">
 
             <?php foreach($store->getAll() as $augalas): ?>
             <?php if ($augalas instanceof Agurkas): ?>
@@ -70,7 +80,7 @@ if(isset($_POST['rauti'])) {
                         </p>
                     </div>
                     <div class="israuti">
-                        <button type="submit" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
+                        <button type="button" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
                     </div>
                 </div>
         
@@ -88,12 +98,15 @@ if(isset($_POST['rauti'])) {
                         </p>
                     </div>
                     <div class="israuti">
-                        <button type="submit" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
+                        <button type="button" name="rauti" class="israutiButton" value="<?= $augalas->id ?>">israuti</button>
                     </div>
                 </div>
 
             <?php endif ?>
             <?php endforeach ?>
+
+
+            </div>
             <button type="submit" name="sodintiAgurka" class="sodintiAgurka">SODINTI AGURKA</button>
             <button type="submit" name="sodintiPomidora" class="sodintiPomidora">SODINTI POMIDORA</button>
         </form>

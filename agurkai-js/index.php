@@ -1,7 +1,7 @@
 <?php
 define('DOOR_BELL', 'ring');
-define('INSTALL_FOLDER', '/HomeWork/agurkai-obj/');
-define('URL', 'http://localhost/HomeWork/agurkai-obj/');
+define('INSTALL_FOLDER', '/HomeWork/agurkai-js/');
+define('URL', 'http://localhost/HomeWork/agurkai-js/');
 define('DIR', __DIR__);
 
 use Sodas\App;
