@@ -119,7 +119,7 @@ if('POST' == $_SERVER['REQUEST_METHOD']) {
 
         <form action="<?= URL.'sodinimas' ?>" method="POST">
             <div class="sodAgurka">
-                <input class="agurkasKiek" type="text" name="sodintiAgurka" id="agurkas">
+                <input class="agurkasKiek" type="text" name="kiekAgurku" id="agurkas">
                 <button class="sodintiAgurka" type="button">Sodinti agurka</button>
             </div>
             <div class="sodPomidora">
