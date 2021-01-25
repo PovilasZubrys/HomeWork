@@ -169,3 +169,15 @@ header > div > a {
     color: white;
     border-radius: 5px 5px 0px 0px;
 }
+.sodAgurka {
+    width: 50%;
+    float: left;
+}
+
+.sodPomidora {
+    width: 50%;
+    float: right;
+}
+.agurkasKiek,
+.pomidorasKiek {
+}

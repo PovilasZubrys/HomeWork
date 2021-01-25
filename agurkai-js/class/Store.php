@@ -12,8 +12,8 @@ class Store {
     {
         $this->fileName = $file;
         if (!file_exists(self::PATH.$this->fileName.'.json')) {
-            file_put_contents(self::PATH.$this->fileName.'.json', json_encode(['obj' => [], 'agurku ID' => 0])); // pradinis masyvas
-            $this->data = ['obj' => [], 'augalo ID' => 0];
+            file_put_contents(self::PATH.$this->fileName.'.json', json_encode(['augalas' => [], 'augalasID' => 0])); // pradinis masyvas
+            $this->data = ['augalas' => [], 'augalasID' => 0];
         }
         else {
             $this->data = file_get_contents(self::PATH.$this->fileName.'.json'); // nuskaitom faila
@@ -38,25 +38,28 @@ class Store {
 
     public function getNewId()
     {
-        $id = $this->data['agurku ID'];
-        $this->data['agurku ID']++;
+        $id = $this->data['augalasID'];
+        $this->data['augalasID']++;
         return $id;
     }
 
     public function save($augalas, $key) {
         $augalas = serialize($augalas);
-        $this->data['obj'][$key] = $augalas;
+        $this->data['augalas'][$key] = $augalas;
     }
 
-    public function addNew($obj)
-    {
-        $this->data['obj'][] = serialize($obj);
+    public function addAgurkas(Agurkas $agurkasObj) {
+        $this->data['augalas'][] = serialize($agurkasObj);
+    }
+
+    public function addPomidoras(Pomidoras $pomidorasObj) {
+        $this->data['augalas'][] = serialize($pomidorasObj);
     }
 
     public function getAll()
     {
         $all = [];
-        foreach($this->data['obj'] as $obj) {
+        foreach($this->data['augalas'] as $obj) {
             $all[] = unserialize($obj);
         }
         return $all;
@@ -65,16 +68,16 @@ class Store {
 
     public function remove($id)
     {
-        foreach($this->data['obj'] as $index => $obj) {
+        foreach($this->data['augalas'] as $index => $obj) {
             $obj = unserialize($obj);
             if ($obj->id == $id) {
-                unset($this->data['obj'][$index]);
+                unset($this->data['augalas'][$index]);
             }
         }
     }
 
     public function grow() {
-        foreach ($this->data['obj'] as $key => $augalas) {
+        foreach ($this->data['augalas'] as $key => $augalas) {
             $augalas = unserialize($augalas);
             $augalas->auginti($_POST['kiekis'][$augalas->id]);
             self::save($augalas, $key);
@@ -82,7 +85,7 @@ class Store {
     }
 
     public function skinti() {
-        foreach ($this->data['obj'] as $key => $augalas) {
+        foreach ($this->data['augalas'] as $key => $augalas) {
 
             $augalas = unserialize($augalas);
 
@@ -99,7 +102,7 @@ class Store {
         }
     }
     public function skintiVisus() {
-        foreach ($this->data['obj'] as $key => $augalas) {
+        foreach ($this->data['augalas'] as $key => $augalas) {
             $augalas = unserialize($augalas);
             if($_POST['skintiVisus'] == $augalas->id){
                 $augalas->nuskintiVisus();
@@ -109,7 +112,7 @@ class Store {
     }
 
     public function skintiDerliu() {
-        foreach  ($this->data['obj'] as $key => $augalas) {
+        foreach  ($this->data['augalas'] as $key => $augalas) {
             $augalas = unserialize($augalas);
             $augalas->nuskintiVisus();
             self::save($augalas, $key);
